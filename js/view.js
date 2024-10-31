@@ -33,7 +33,6 @@ function createFoldersHtml() {
         if (folder.hasOwnProperty('content') || folder.parentId != currentId) continue;
         html += `📁 <a href="javascript:select(${folder.id})">${folder.name}</a><br/>`;
     }
-
     return html;
 }
 

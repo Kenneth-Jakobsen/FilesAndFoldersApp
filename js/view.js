@@ -5,8 +5,10 @@ function updateView() {
         ${createFoldersHtml()}
         ${createFilesHtml()}
         ${createEditFileHtml()}
-        <button>Ny Fil</button>
-        <button>Ny Mappe</button>
+        ${!model.app.isEditing ? `
+          <button onclick="createNewFile()">Ny Fil</button>
+          <button onclick="createNewFolder()">Ny Mappe</button>
+        ` : ''}
     `;
 }
 
@@ -37,16 +39,17 @@ function createFoldersHtml() {
   for (let folder of model.filesAndFolders) {
     if (folder.hasOwnProperty("content") || folder.parentId != currentId)
       continue;
-    html += `📁 <a href="javascript:select(${folder.id})">${folder.name}</a><br/>`;
+    html += `📁 <a href="javascript:select(${folder.id})">${folder.name}</a> 
+    <button>Bytt navn</button>
+    <button onclick="deleteFile(${folder.id})">Slett</button>
+ <br/>`;
   }
   return html;
 }
 
 function createFilesHtml() {
   let currentId = model.app.currentId;
-  const currentFileOrFolder = model.filesAndFolders.find(
-    (f) => f.id == currentId
-  );
+  const currentFileOrFolder = model.filesAndFolders.find((f) => f.id == currentId);
   if (currentFileOrFolder != null) {
     if (currentFileOrFolder.hasOwnProperty("content"))
       currentId = currentFileOrFolder.parentId;
@@ -54,7 +57,10 @@ function createFilesHtml() {
   let html = "";
   for (let file of model.filesAndFolders) {
     if (!file.hasOwnProperty("content") || file.parentId != currentId) continue;
-    html += `<span>🗎</span> <a href="javascript:select(${file.id})">${file.name}</a><br/>`;
+    html += `<span>🗎</span> <a href="javascript:select(${file.id})">${file.name}</a> 
+    <button>Bytt navn</button>
+    <button onclick="deleteFile(${file.id})">Slett</button>
+    <br>`;
   }
   return html;
 }
@@ -64,10 +70,23 @@ function createEditFileHtml() {
   if (currentId == null) return "";
   const currentFile = model.filesAndFolders.find((f) => f.id == currentId);
   if (!currentFile.hasOwnProperty("content")) return "";
-  return /*HTML*/ `
-        <textarea>${currentFile.content}</textarea>    
-        <br/>
-        <button>Lagre</button>
-        <button>Avbryt</button>
-    `;
+
+
+  if(model.app.isEditing){
+    return /*HTML*/ `
+    <textarea style="resize: none;">${currentFile.content}</textarea>    
+    <br/>
+    <button onclick="saveEdit(${currentId})">Lagre</button>
+    <button onclick="cancelEdit()">Avbryt</button>
+`;
+  }
+  else{
+    return /*HTML*/ `
+    <div class="file-content">${currentFile.content}</div>
+    <br/>
+    <button onclick="editFile(${currentId})">Rediger</button>
+  `;
+  }
+
+
 }

@@ -1,7 +1,8 @@
 const model = {
     app: {
         currentId: null,
-    },    
+    },
+    isEditing:false,
     filesAndFolders: [
         {id: 1, name: 'Handlelister'},
         {id: 2, name: 'Ting som skal fikses'},

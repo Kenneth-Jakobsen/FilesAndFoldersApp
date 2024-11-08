@@ -5,12 +5,16 @@ function updateView() {
         ${createFoldersHtml()}
         ${createFilesHtml()}
         ${createEditFileHtml()}
-        ${!model.app.isEditing ? `
-          <button onclick="createNewFile()">Ny Fil</button>
-          <button onclick="createNewFolder()">Ny Mappe</button>
-        ` : ''}
+        ${isTextFileClosed() ? createButtonsHtml() : ''}
     `;
 }
+
+function createButtonsHtml() {
+    return `
+      <button onclick="createNew('Fil')">Ny Fil</button>
+      <button onclick="createNew('Mappe')">Ny Mappe</button>
+    `;
+};
 
 function createSummarySelected() {
   let id = model.app.currentId;
@@ -23,7 +27,8 @@ function createSummarySelected() {
     id = fileOrFolder.parentId;
   }
   return breadcrumbs;
-}
+};
+
 
 function createFoldersHtml() {
   let currentId = model.app.currentId;
@@ -40,12 +45,12 @@ function createFoldersHtml() {
     if (folder.hasOwnProperty("content") || folder.parentId != currentId)
       continue;
     html += `📁 <a href="javascript:select(${folder.id})">${folder.name}</a> 
-    <button>Bytt navn</button>
+    <button onclick="rename(${folder.id})">Bytt navn</button>
     <button onclick="deleteFile(${folder.id})">Slett</button>
  <br/>`;
   }
   return html;
-}
+};
 
 function createFilesHtml() {
   let currentId = model.app.currentId;
@@ -58,12 +63,12 @@ function createFilesHtml() {
   for (let file of model.filesAndFolders) {
     if (!file.hasOwnProperty("content") || file.parentId != currentId) continue;
     html += `<span>🗎</span> <a href="javascript:select(${file.id})">${file.name}</a> 
-    <button>Bytt navn</button>
+    <button onclick="rename(${file.id})">Bytt navn</button>
     <button onclick="deleteFile(${file.id})">Slett</button>
     <br>`;
   }
   return html;
-}
+};
 
 function createEditFileHtml() {
   const currentId = model.app.currentId;
@@ -71,15 +76,14 @@ function createEditFileHtml() {
   const currentFile = model.filesAndFolders.find((f) => f.id == currentId);
   if (!currentFile.hasOwnProperty("content")) return "";
 
-
-  if(model.app.isEditing){
+  if(model.isEditing){
     return /*HTML*/ `
     <textarea style="resize: none;">${currentFile.content}</textarea>    
     <br/>
     <button onclick="saveEdit(${currentId})">Lagre</button>
     <button onclick="cancelEdit()">Avbryt</button>
-`;
-  }
+`}
+
   else{
     return /*HTML*/ `
     <div class="file-content">${currentFile.content}</div>
@@ -87,6 +91,4 @@ function createEditFileHtml() {
     <button onclick="editFile(${currentId})">Rediger</button>
   `;
   }
-
-
-}
+};

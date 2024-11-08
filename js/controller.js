@@ -22,7 +22,7 @@ function editFile(){
 };
 
 function deleteFile(id) {
-    if(isTextFileClosed() && !model.isEditing){
+    if(isTextFileClosed()){
         function deleteAllFiles(fileId) { //delete all children of the file
             const index = model.filesAndFolders.findIndex(f => f.id === fileId);
             if (index !== -1) {

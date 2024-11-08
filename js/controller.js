@@ -37,7 +37,7 @@ function deleteFile(id) {
         updateView();
     }
     else{
-        alert('Cant delete an open textfile')
+        alert('Exit the file before deleting')
     }
 };
 
@@ -46,22 +46,20 @@ function createNew(value){
     const parentId = model.app.currentId
     const newId = model.filesAndFolders.length+1
     const isFile = value === 'Fil'
-    if(isTextFileClosed()){
-        const newFolder = {
+    const newFolder = {
             id:newId,
             name:`Ny ${value} (${newId}) `,
             ...(parentId && { parentId }),
             ...(isFile && {content:'Jeg er en ny fil'})
         }
-        model.filesAndFolders.push(newFolder)
-        updateView();
-    };
-};
 
+    model.filesAndFolders.push(newFolder)
+    updateView();
+};
 
 function isTextFileClosed(){
     return !document.querySelector('.file-content') && !model.isEditing
-};
+}
 
 function rename(id) {
     if(isTextFileClosed()){
@@ -71,7 +69,7 @@ function rename(id) {
         updateView(); 
     }
     else{
-        alert('Cant rename an open text file')
+        alert('Exit the file to change the name')
     }
 };
 

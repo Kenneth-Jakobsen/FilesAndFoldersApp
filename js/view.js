@@ -5,8 +5,9 @@ function updateView() {
         ${createFoldersHtml()}
         ${createFilesHtml()}
         ${createEditFileHtml()}
-        ${isTextFileClosed() ? createButtonsHtml() : ''}
+        <br>               
     `;
+    document.getElementById("app").innerHTML += `${isTextFileClosed() ? createButtonsHtml() : ''}`;
 }
 
 function createButtonsHtml() {

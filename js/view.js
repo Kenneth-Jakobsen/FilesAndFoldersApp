@@ -84,7 +84,6 @@ function createEditFileHtml() {
     <button onclick="saveEdit(${currentId})">Lagre</button>
     <button onclick="cancelEdit()">Avbryt</button>
 `}
-
   else{
     return /*HTML*/ `
     <div class="file-content">${currentFile.content}</div>

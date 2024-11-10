@@ -44,7 +44,7 @@ function deleteFile(id) {
 
 function createNew(value){
     const parentId = model.app.currentId
-    const newId = model.filesAndFolders.length+1
+    const newId = Math.max(...model.filesAndFolders.map(f => f.id)) + 1;
     const isFile = value === 'Fil'
     const newFolder = {
             id:newId,
